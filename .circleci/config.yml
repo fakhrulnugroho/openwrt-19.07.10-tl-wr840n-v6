@@ -27,18 +27,17 @@ jobs:
           name: Install gh CLI
           command: |
             sudo apt install -y gh
-      # - run:
-      #     name: Publish GitHub Release
-      #     command: |
-      #       TAG="openwrt-19.07.10-wr840n-v6"
-      #       echo "$GITHUB_TOKEN" | gh auth login --with-token
+      - run:
+          name: Publish GitHub Release
+          command: |
+            TAG="openwrt-19.07.10-wr840n-v6"
 
-      #       gh release create "$TAG" \
-      #         bin/targets/ramips/mt76x8/*.bin \
-      #         bin/targets/ramips/mt76x8/*.manifest \
-      #         bin/targets/ramips/mt76x8/config.buildinfo \
-      #         --title "OpenWrt 19.07.10 WR840N v6" \
-      #         --notes "Automated build via CircleCI"
+            gh release create "$TAG" \
+              bin/targets/ramips/mt76x8/*.bin \
+              bin/targets/ramips/mt76x8/*.manifest \
+              bin/targets/ramips/mt76x8/config.buildinfo \
+              --title "OpenWrt 19.07.10 WR840N v6" \
+              --notes "Automated build via CircleCI"
       - save_cache:
           key: openwrt-v6
           paths:
