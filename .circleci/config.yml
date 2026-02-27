@@ -12,7 +12,9 @@ jobs:
     resource_class: arm.large
     steps:
       - checkout
-      - run: git branch
+      - restore_cache:
+          keys:
+            - openwrt-cache
       - run: echo "Build OpenWrt system image"
       - run: ./scripts/feeds update -a
       - run: ./scripts/feeds install -a
@@ -21,6 +23,27 @@ jobs:
           name: Build OpenWrt
           command: make -j$(nproc)
           no_output_timeout: 30m
+      - run:
+          name: Install gh CLI
+          command: |
+            sudo apt install -y gh
+      - run:
+          name: Publish GitHub Release
+          command: |
+            TAG="openwrt-19.07-wr840n-v6"
+            gh auth login --with-token <<< "$GITHUB_TOKEN"
+
+            gh release create "$TAG" \
+              bin/targets/ramips/mt76x8/*.bin \
+              bin/targets/ramips/mt76x8/*.manifest \
+              bin/targets/ramips/mt76x8/config.buildinfo \
+              --title "OpenWrt 19.07 WR840N v6" \
+              --notes "Automated build via CircleCI"
+      - save_cache:
+          key: openwrt-v1-{{ checksum ".config" }}
+          paths:
+            - dl
+            - feeds
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/guides/orchestrate/workflows/ & https://circleci.com/docs/reference/configuration-reference/#workflows
