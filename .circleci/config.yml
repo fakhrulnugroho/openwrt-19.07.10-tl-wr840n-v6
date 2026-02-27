@@ -9,7 +9,7 @@ jobs:
   build:
     machine:
       image: ubuntu-2204:current
-    resource_class: arm.2xlarge
+    resource_class: arm.xlarge
     steps:
       - checkout
       - run: git branch
