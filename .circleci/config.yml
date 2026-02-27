@@ -9,7 +9,7 @@ jobs:
   build:
     machine:
       image: ubuntu-2204:current
-    resource_class: arm.medium
+    resource_class: arm.2xlarge
     steps:
       - checkout
       - run: git branch
@@ -17,7 +17,10 @@ jobs:
       - run: ./scripts/feeds update -a
       - run: ./scripts/feeds install -a
       - run: make defconfig
-      - run: make -j$(nproc) V=s
+      - run:
+          name: Build OpenWrt
+          command: make -j$(nproc)
+          no_output_timeout: 30m
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/guides/orchestrate/workflows/ & https://circleci.com/docs/reference/configuration-reference/#workflows
