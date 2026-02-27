@@ -15,6 +15,9 @@ jobs:
       - run: git branch
       - run: echo "Build OpenWrt system image"
       - run: ./scripts/feeds update -a
+      - run: ./scripts/feeds install -a
+      - run: make defconfig
+      - run: make -j$(nproc) V=s
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/guides/orchestrate/workflows/ & https://circleci.com/docs/reference/configuration-reference/#workflows
